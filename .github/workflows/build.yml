@@ -1,0 +1,31 @@
+name: Build PSP Game
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: pspdev/pspdev:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build project
+        run: |
+          make clean || true
+          make
+
+      - name: Upload EBOOT Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: PSP-EBOOT
+          path: |
+            **/EBOOT.PBP
+            **/PARAM.SFO
